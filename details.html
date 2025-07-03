@@ -1,0 +1,555 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Product Details</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    :root {
+      --primary: #4361ee;
+      --secondary: #3f37c9;
+      --accent: #4895ef;
+      --light: #f8f9fa;
+      --dark: #212529;
+      --success: #4cc9f0;
+      --danger: #f72585;
+      --warning: #f8961e;
+      --info: #560bad;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: #f5f7fa;
+      color: var(--dark);
+      line-height: 1.6;
+      padding: 0;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 30px;
+      animation: fadeIn 0.5s ease;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .back-button {
+      display: inline-flex;
+      align-items: center;
+      margin-bottom: 20px;
+      color: var(--primary);
+      text-decoration: none;
+      font-weight: 500;
+      transition: color 0.3s ease;
+    }
+
+    .back-button i {
+      margin-right: 8px;
+      transition: transform 0.3s ease;
+    }
+
+    .back-button:hover {
+      color: var(--secondary);
+    }
+
+    .back-button:hover i {
+      transform: translateX(-5px);
+    }
+
+    .product-header {
+      display: flex;
+      flex-direction: column;
+      margin-bottom: 30px;
+    }
+
+    .product-title {
+      font-size: 2.2rem;
+      color: var(--dark);
+      margin-bottom: 10px;
+    }
+
+    .product-subtitle {
+      display: flex;
+      align-items: center;
+      color: #666;
+      margin-bottom: 20px;
+    }
+
+    .product-brand {
+      background-color: var(--light);
+      color: var(--primary);
+      padding: 5px 10px;
+      border-radius: 4px;
+      font-size: 0.9rem;
+      margin-right: 15px;
+    }
+
+    .product-rating {
+      display: flex;
+      align-items: center;
+      color: var(--warning);
+      margin-right: 15px;
+    }
+
+    .product-rating i {
+      margin-right: 5px;
+    }
+
+    .product-content {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 40px;
+    }
+
+    .product-gallery {
+      position: relative;
+    }
+
+    .main-slider {
+      display: flex;
+      overflow-x: auto;
+      scroll-snap-type: x mandatory;
+      gap: 15px;
+      padding-bottom: 15px;
+      margin-bottom: 15px;
+      scrollbar-width: none;
+    }
+
+    .main-slider::-webkit-scrollbar {
+      display: none;
+    }
+
+    .main-slider img {
+      scroll-snap-align: start;
+      width: 100%;
+      height: 400px;
+      object-fit: contain;
+      border-radius: 8px;
+      background-color: white;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      transition: transform 0.3s ease;
+    }
+
+    .main-slider img:hover {
+      transform: scale(1.02);
+    }
+
+    .thumbnail-slider {
+      display: flex;
+      gap: 10px;
+      overflow-x: auto;
+      padding-bottom: 10px;
+    }
+
+    .thumbnail-slider img {
+      width: 80px;
+      height: 80px;
+      object-fit: cover;
+      border-radius: 4px;
+      cursor: pointer;
+      opacity: 0.7;
+      transition: all 0.3s ease;
+    }
+
+    .thumbnail-slider img:hover,
+    .thumbnail-slider img.active {
+      opacity: 1;
+      border: 2px solid var(--primary);
+    }
+
+    .product-info {
+      background-color: white;
+      padding: 30px;
+      border-radius: 12px;
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+    }
+
+    .price-section {
+      margin-bottom: 25px;
+    }
+
+    .current-price {
+      font-size: 2rem;
+      font-weight: bold;
+      color: var(--primary);
+      margin-right: 15px;
+    }
+
+    .original-price {
+      font-size: 1.2rem;
+      text-decoration: line-through;
+      color: #999;
+    }
+
+    .discount-badge {
+      display: inline-block;
+      background-color: var(--danger);
+      color: white;
+      padding: 5px 10px;
+      border-radius: 20px;
+      font-size: 0.9rem;
+      font-weight: bold;
+      margin-left: 15px;
+      animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+      0% { transform: scale(1); }
+      50% { transform: scale(1.05); }
+      100% { transform: scale(1); }
+    }
+
+    .product-description {
+      margin-bottom: 25px;
+      color: #555;
+      line-height: 1.7;
+    }
+
+    .details-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 15px;
+      margin-bottom: 25px;
+    }
+
+    .detail-item {
+      display: flex;
+    }
+
+    .detail-label {
+      font-weight: 600;
+      color: var(--dark);
+      min-width: 120px;
+    }
+
+    .detail-value {
+      color: #555;
+    }
+
+    .action-buttons {
+      display: flex;
+      gap: 15px;
+      margin-top: 30px;
+    }
+
+    .btn {
+      padding: 12px 25px;
+      border-radius: 6px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      border: none;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .btn i {
+      margin-right: 8px;
+    }
+
+    .btn-primary {
+      background-color: var(--primary);
+      color: white;
+      flex: 1;
+    }
+
+    .btn-primary:hover {
+      background-color: var(--secondary);
+      transform: translateY(-2px);
+      box-shadow: 0 5px 15px rgba(67, 97, 238, 0.3);
+    }
+
+    .btn-secondary {
+      background-color: white;
+      color: var(--primary);
+      border: 1px solid var(--primary);
+    }
+
+    .btn-secondary:hover {
+      background-color: var(--light);
+      transform: translateY(-2px);
+    }
+
+    .reviews-section {
+      margin-top: 50px;
+      background-color: white;
+      padding: 30px;
+      border-radius: 12px;
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+    }
+
+    .section-title {
+      font-size: 1.5rem;
+      margin-bottom: 20px;
+      color: var(--dark);
+      position: relative;
+      padding-bottom: 10px;
+    }
+
+    .section-title::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 60px;
+      height: 3px;
+      background-color: var(--primary);
+    }
+
+    .review {
+      padding: 20px 0;
+      border-bottom: 1px solid #eee;
+      animation: fadeInUp 0.5s ease;
+    }
+
+    @keyframes fadeInUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .review-header {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 10px;
+    }
+
+    .reviewer {
+      font-weight: 600;
+      color: var(--dark);
+    }
+
+    .review-date {
+      color: #999;
+      font-size: 0.9rem;
+    }
+
+    .review-rating {
+      color: var(--warning);
+      margin-bottom: 5px;
+    }
+
+    .review-comment {
+      color: #555;
+      line-height: 1.6;
+    }
+
+    .no-reviews {
+      color: #999;
+      font-style: italic;
+      padding: 20px 0;
+    }
+
+    @media (max-width: 992px) {
+      .product-content {
+        grid-template-columns: 1fr;
+      }
+      
+      .main-slider img {
+        height: 350px;
+      }
+    }
+
+    @media (max-width: 768px) {
+      .container {
+        padding: 20px;
+      }
+      
+      .product-title {
+        font-size: 1.8rem;
+      }
+      
+      .details-grid {
+        grid-template-columns: 1fr;
+      }
+      
+      .action-buttons {
+        flex-direction: column;
+      }
+    }
+
+    @media (max-width: 576px) {
+      .main-slider img {
+        height: 250px;
+      }
+      
+      .product-subtitle {
+        flex-wrap: wrap;
+        gap: 10px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <a href="index.html" class="back-button">
+      <i class="fas fa-arrow-left"></i> Back to Products
+    </a>
+    
+    <div id="productDetails"></div>
+  </div>
+
+  <script>
+    const product = JSON.parse(localStorage.getItem("selectedProduct"));
+    const container = document.getElementById("productDetails");
+
+    if (product) {
+      // Generate slider images
+      let sliderImgs = "";
+      let thumbnails = "";
+      const images = product.images || [product.thumbnail || "https://via.placeholder.com/500"];
+      
+      images.forEach((img, index) => {
+        sliderImgs += `<img src="${img}" alt="Product Image ${index + 1}">`;
+        thumbnails += `<img src="${img}" alt="Thumbnail ${index + 1}" class="${index === 0 ? 'active' : ''}" onclick="changeMainImage(${index})">`;
+      });
+
+      // Generate reviews
+      let reviewsHTML = "";
+      if (product.reviews?.length) {
+        product.reviews.forEach((r) => {
+          let stars = "";
+          for (let i = 0; i < 5; i++) {
+            stars += `<i class="fas fa-star${i < r.rating ? '' : '-half-alt'}"></i>`;
+          }
+          
+          reviewsHTML += `
+            <div class="review">
+              <div class="review-header">
+                <span class="reviewer">${r.reviewerName}</span>
+                <span class="review-date">${new Date(r.date).toLocaleDateString()}</span>
+              </div>
+              <div class="review-rating">${stars}</div>
+              <p class="review-comment">${r.comment}</p>
+            </div>
+          `;
+        });
+      } else {
+        reviewsHTML = '<div class="no-reviews">No reviews available for this product.</div>';
+      }
+
+      // Generate details HTML
+      container.innerHTML = `
+        <div class="product-header">
+          <h1 class="product-title">${product.title}</h1>
+          <div class="product-subtitle">
+            <span class="product-brand">${product.brand}</span>
+            <span class="product-rating">
+              <i class="fas fa-star"></i> ${product.rating}
+            </span>
+            <span><i class="fas fa-box"></i> ${product.stock} in stock</span>
+          </div>
+        </div>
+        
+        <div class="product-content">
+          <div class="product-gallery">
+            <div class="main-slider" id="mainSlider">
+              ${sliderImgs}
+            </div>
+            <div class="thumbnail-slider">
+              ${thumbnails}
+            </div>
+          </div>
+          
+          <div class="product-info">
+            <div class="price-section">
+              <span class="current-price">₹${product.price}</span>
+              <span class="original-price">₹${Math.round(product.price / (1 - product.discountPercentage/100))}</span>
+              <span class="discount-badge">${product.discountPercentage}% OFF</span>
+            </div>
+            
+            <p class="product-description">${product.description}</p>
+            
+            <div class="details-grid">
+              <div class="detail-item">
+                <span class="detail-label">Category:</span>
+                <span class="detail-value">${product.category}</span>
+              </div>
+              <div class="detail-item">
+                <span class="detail-label">SKU:</span>
+                <span class="detail-value">${product.sku || "N/A"}</span>
+              </div>
+              <div class="detail-item">
+                <span class="detail-label">Weight:</span>
+                <span class="detail-value">${product.weight || "N/A"}g</span>
+              </div>
+              <div class="detail-item">
+                <span class="detail-label">Dimensions:</span>
+                <span class="detail-value">${product.dimensions ? `${product.dimensions.width} × ${product.dimensions.height} × ${product.dimensions.depth} cm` : "N/A"}</span>
+              </div>
+              <div class="detail-item">
+                <span class="detail-label">Warranty:</span>
+                <span class="detail-value">${product.warrantyInformation || "N/A"}</span>
+              </div>
+              <div class="detail-item">
+                <span class="detail-label">Shipping:</span>
+                <span class="detail-value">${product.shippingInformation || "N/A"}</span>
+              </div>
+              <div class="detail-item">
+                <span class="detail-label">Return Policy:</span>
+                <span class="detail-value">${product.returnPolicy || "N/A"}</span>
+              </div>
+              <div class="detail-item">
+                <span class="detail-label">Min Order:</span>
+                <span class="detail-value">${product.minimumOrderQuantity || "N/A"}</span>
+              </div>
+            </div>
+            
+            <div class="action-buttons">
+              <button class="btn btn-primary">
+                <i class="fas fa-shopping-cart"></i> Add to Cart
+              </button>
+              <button class="btn btn-secondary">
+                <i class="far fa-heart"></i> Wishlist
+              </button>
+            </div>
+          </div>
+        </div>
+        
+        <div class="reviews-section">
+          <h2 class="section-title">Customer Reviews</h2>
+          ${reviewsHTML}
+        </div>
+      `;
+    } else {
+      container.innerHTML = `
+        <div class="error-message">
+          <i class="fas fa-exclamation-triangle"></i>
+          <h2>Product not found</h2>
+          <p>Please go back to the product listing and try again.</p>
+          <a href="index.html" class="btn btn-primary">Back to Products</a>
+        </div>
+      `;
+    }
+
+    function changeMainImage(index) {
+      const mainSlider = document.getElementById('mainSlider');
+      const thumbnails = document.querySelectorAll('.thumbnail-slider img');
+      
+      // Scroll main slider to the selected image
+      mainSlider.scrollTo({
+        left: mainSlider.children[index].offsetLeft,
+        behavior: 'smooth'
+      });
+      
+      // Update active thumbnail
+      thumbnails.forEach((thumb, i) => {
+        thumb.classList.toggle('active', i === index);
+      });
+    }
+  </script>
+
+</body>
+</html>
